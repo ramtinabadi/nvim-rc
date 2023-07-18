@@ -50,6 +50,18 @@ return require('packer').startup(function(use)
         cond = isNotVSCode
     })
 
+    -- File Tree
+    use({
+        'nvim-tree/nvim-tree.lua',
+        cond = isNotVSCode
+    })
+
+    -- File Tree Icons
+    use({
+        'nvim-tree/nvim-web-devicons',
+        cond = isNotVSCode
+    })
+
     -- LSP Zero
     use {
         'VonHeikemen/lsp-zero.nvim',
