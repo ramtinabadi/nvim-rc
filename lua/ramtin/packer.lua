@@ -23,10 +23,10 @@ return require('packer').startup(function(use)
 
     -- Rose Pine Color Scheme
     use({
-        'rose-pine/neovim',
-        as = 'rose-pine',
+        'Ardakilic/vim-tomorrow-night-theme',
+        as = 'tomorrow-night',
         config = function()
-            vim.cmd('colorscheme rose-pine')
+            vim.cmd('colorscheme tomorrow-night')
         end,
         cond = isNotVSCode
     })

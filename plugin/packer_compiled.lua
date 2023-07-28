@@ -149,15 +149,6 @@ _G.packer_plugins = {
     path = "/Users/ramtin/.local/share/nvim/site/pack/packer/start/plenary.nvim",
     url = "https://github.com/nvim-lua/plenary.nvim"
   },
-  ["rose-pine"] = {
-    cond = { "\27LJ\2\n8\0\0\1\0\3\0\t6\0\0\0009\0\1\0009\0\2\0\n\0\0\0X\0\2€+\0\1\0X\1\1€+\0\2\0L\0\2\0\vvscode\6g\bvim\0" },
-    config = { "\27LJ\2\n9\0\0\3\0\3\0\0056\0\0\0009\0\1\0'\2\2\0B\0\2\1K\0\1\0\26colorscheme rose-pine\bcmd\bvim\0" },
-    loaded = false,
-    needs_bufread = false,
-    only_cond = true,
-    path = "/Users/ramtin/.local/share/nvim/site/pack/packer/opt/rose-pine",
-    url = "https://github.com/rose-pine/neovim"
-  },
   ["telescope.nvim"] = {
     cond = { "\27LJ\2\n8\0\0\1\0\3\0\t6\0\0\0009\0\1\0009\0\2\0\n\0\0\0X\0\2€+\0\1\0X\1\1€+\0\2\0L\0\2\0\vvscode\6g\bvim\0" },
     loaded = false,
@@ -165,6 +156,15 @@ _G.packer_plugins = {
     only_cond = true,
     path = "/Users/ramtin/.local/share/nvim/site/pack/packer/opt/telescope.nvim",
     url = "https://github.com/nvim-telescope/telescope.nvim"
+  },
+  ["tomorrow-night"] = {
+    cond = { "\27LJ\2\n8\0\0\1\0\3\0\t6\0\0\0009\0\1\0009\0\2\0\n\0\0\0X\0\2€+\0\1\0X\1\1€+\0\2\0L\0\2\0\vvscode\6g\bvim\0" },
+    config = { "\27LJ\2\n>\0\0\3\0\3\0\0056\0\0\0009\0\1\0'\2\2\0B\0\2\1K\0\1\0\31colorscheme tomorrow-night\bcmd\bvim\0" },
+    loaded = false,
+    needs_bufread = false,
+    only_cond = true,
+    path = "/Users/ramtin/.local/share/nvim/site/pack/packer/opt/tomorrow-night",
+    url = "https://github.com/Ardakilic/vim-tomorrow-night-theme"
   },
   undotree = {
     cond = { "\27LJ\2\n8\0\0\1\0\3\0\t6\0\0\0009\0\1\0009\0\2\0\n\0\0\0X\0\2€+\0\1\0X\1\1€+\0\2\0L\0\2\0\vvscode\6g\bvim\0" },
@@ -186,33 +186,33 @@ _G.packer_plugins = {
 
 time([[Defining packer_plugins]], false)
 -- Conditional loads
-time([[Conditional loading of telescope.nvim]], true)
-  require("packer.load")({"telescope.nvim"}, {}, _G.packer_plugins)
-time([[Conditional loading of telescope.nvim]], false)
-time([[Conditional loading of packer.nvim]], true)
-  require("packer.load")({"packer.nvim"}, {}, _G.packer_plugins)
-time([[Conditional loading of packer.nvim]], false)
-time([[Conditional loading of nvim-treesitter]], true)
-  require("packer.load")({"nvim-treesitter"}, {}, _G.packer_plugins)
-time([[Conditional loading of nvim-treesitter]], false)
 time([[Conditional loading of undotree]], true)
   require("packer.load")({"undotree"}, {}, _G.packer_plugins)
 time([[Conditional loading of undotree]], false)
 time([[Conditional loading of vim-fugitive]], true)
   require("packer.load")({"vim-fugitive"}, {}, _G.packer_plugins)
 time([[Conditional loading of vim-fugitive]], false)
-time([[Conditional loading of nvim-tree.lua]], true)
-  require("packer.load")({"nvim-tree.lua"}, {}, _G.packer_plugins)
-time([[Conditional loading of nvim-tree.lua]], false)
 time([[Conditional loading of lsp-zero.nvim]], true)
   require("packer.load")({"lsp-zero.nvim"}, {}, _G.packer_plugins)
 time([[Conditional loading of lsp-zero.nvim]], false)
-time([[Conditional loading of rose-pine]], true)
-  require("packer.load")({"rose-pine"}, {}, _G.packer_plugins)
-time([[Conditional loading of rose-pine]], false)
+time([[Conditional loading of nvim-treesitter]], true)
+  require("packer.load")({"nvim-treesitter"}, {}, _G.packer_plugins)
+time([[Conditional loading of nvim-treesitter]], false)
+time([[Conditional loading of nvim-tree.lua]], true)
+  require("packer.load")({"nvim-tree.lua"}, {}, _G.packer_plugins)
+time([[Conditional loading of nvim-tree.lua]], false)
+time([[Conditional loading of packer.nvim]], true)
+  require("packer.load")({"packer.nvim"}, {}, _G.packer_plugins)
+time([[Conditional loading of packer.nvim]], false)
 time([[Conditional loading of nvim-web-devicons]], true)
   require("packer.load")({"nvim-web-devicons"}, {}, _G.packer_plugins)
 time([[Conditional loading of nvim-web-devicons]], false)
+time([[Conditional loading of telescope.nvim]], true)
+  require("packer.load")({"telescope.nvim"}, {}, _G.packer_plugins)
+time([[Conditional loading of telescope.nvim]], false)
+time([[Conditional loading of tomorrow-night]], true)
+  require("packer.load")({"tomorrow-night"}, {}, _G.packer_plugins)
+time([[Conditional loading of tomorrow-night]], false)
 
 _G._packer.inside_compile = false
 if _G._packer.needs_bufread == true then
