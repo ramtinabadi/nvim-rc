@@ -51,10 +51,10 @@ return require('packer').startup(function(use)
     })
 
     -- File Tree
-    use({
-        'nvim-tree/nvim-tree.lua',
-        cond = isNotVSCode
-    })
+    -- use({
+    --     'nvim-tree/nvim-tree.lua',
+    --     cond = isNotVSCode
+    -- })
 
     -- File Tree Icons
     use({
