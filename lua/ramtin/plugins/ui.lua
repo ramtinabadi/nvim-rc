@@ -166,17 +166,59 @@ return {
   -- LSP progress toasts
   { 'j-hui/fidget.nvim', event = 'LspAttach', opts = {} },
 
-  -- Minimap. Needs the `code-minimap` binary: brew install code-minimap
+  -- Minimap. Shows LSP diagnostics, gitsigns hunks and search matches.
+  -- Pure Lua, no external binary. The plugin handles its own lazy loading.
   {
-    'wfxr/minimap.vim',
-    cond = function() return vim.fn.executable('code-minimap') == 1 end,
-    cmd = { 'Minimap', 'MinimapToggle' },
-    keys = { { '<leader>tm', '<cmd>MinimapToggle<cr>', desc = '[T]oggle [M]inimap' } },
+    'Isrothy/neominimap.nvim',
+    version = 'v3.x.x',
+    lazy = false,
+    keys = {
+      { '<leader>tm', '<cmd>Neominimap Toggle<cr>',      desc = '[T]oggle [M]inimap' },
+      { '<leader>tM', '<cmd>Neominimap ToggleFocus<cr>', desc = 'Focus [M]inimap' },
+    },
     init = function()
-      vim.g.minimap_git_colors = 1
-      -- auto_start is off: it fights neo-tree for screen width and costs a
-      -- background process per buffer
-      vim.g.minimap_auto_start = 0
+      -- The minimap floats over the right edge of each window. This keeps the
+      -- cursor from scrolling underneath it on long lines.
+      vim.opt.sidescrolloff = 36
+
+      -- tomorrow-night doesn't define diagnostic colours, so the minimap
+      -- inherits Neovim's pastel red/yellow, which are hard to tell apart.
+      -- Re-applied on ColorScheme because :colorscheme clears highlights.
+      local function minimap_colors()
+        local hl = vim.api.nvim_set_hl
+        hl(0, 'NeominimapErrorIcon', { fg = '#ff5555' })
+        hl(0, 'NeominimapWarnIcon',  { fg = '#f0c674' })
+        hl(0, 'NeominimapInfoIcon',  { fg = '#81a2be' })
+        hl(0, 'NeominimapHintIcon',  { fg = '#8abeb7' })
+      end
+      minimap_colors()
+      vim.api.nvim_create_autocmd('ColorScheme', {
+        group = vim.api.nvim_create_augroup('ramtin_minimap_colors', { clear = true }),
+        callback = minimap_colors,
+      })
+
+      vim.g.neominimap = {
+        auto_enable = true,
+        exclude_filetypes = { 'help', 'lazy', 'mason', 'neo-tree', 'dapui_scopes', 'dapui_watches', 'dapui_stacks', 'dapui_breakpoints', 'dap-repl' },
+        click = { enabled = true },
+        -- 'icon' mode puts one character in the minimap's sign column.
+        -- ('line' paints the whole row; 'sign' draws a single braille dot.)
+        -- Plain Unicode on purpose: the default icons need a Nerd Font.
+        diagnostic = {
+          enabled = true,
+          mode = 'icon',
+          icon = { ERROR = '●', WARN = '●', INFO = '•', HINT = '•' },
+        },
+        git = {
+          enabled = true,
+          mode = 'icon',
+          icon = { add = '▌', change = '▌', delete = '▁' },
+        },
+        search = { enabled = true },
+        -- Two sign columns so a diagnostic and a git bar on the same line
+        -- both show, instead of the diagnostic hiding the git bar.
+        winopt = function(opt) opt.signcolumn = 'auto:2' end,
+      }
     end,
   },
 }
