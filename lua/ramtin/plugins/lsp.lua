@@ -39,7 +39,7 @@ return {
     'saghen/blink.cmp',
     event = { 'InsertEnter', 'CmdlineEnter' },
     version = '1.*',
-    dependencies = { 'rafamadriz/friendly-snippets' },
+    dependencies = { 'rafamadriz/friendly-snippets', 'windwp/nvim-autopairs' },
     opts = {
       keymap = {
         preset = 'default',
@@ -96,9 +96,10 @@ return {
           nmap('K', function() vim.lsp.buf.hover({ border = 'rounded' }) end, 'Hover Documentation')
           nmap('<C-s>', function() vim.lsp.buf.signature_help({ border = 'rounded' }) end, 'Signature Help')
 
+          -- Same pipeline as format-on-save (conform.nvim, see editor.lua)
           vim.api.nvim_buf_create_user_command(bufnr, 'Format', function()
-            vim.lsp.buf.format({ async = true })
-          end, { desc = 'Format buffer via LSP' })
+            require('conform').format({ async = true })
+          end, { desc = 'Format buffer' })
 
           -- Inlay hints, toggleable
           local client = vim.lsp.get_client_by_id(event.data.client_id)

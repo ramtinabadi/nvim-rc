@@ -4,6 +4,44 @@ return {
   -- Detect indentation per project
   { 'tpope/vim-sleuth', event = { 'BufReadPre', 'BufNewFile' } },
 
+  -- Auto-close brackets and quotes as you type. check_ts stops it pairing
+  -- inside strings and comments. Listed as a blink.cmp dependency in lsp.lua
+  -- so its <CR> mapping exists before blink wraps <CR> with 'fallback'.
+  {
+    'windwp/nvim-autopairs',
+    event = 'InsertEnter',
+    opts = { check_ts = true },
+  },
+
+  -- Format on save. Python goes through ruff (imports first, then format);
+  -- everything else falls back to the attached LSP, so Dart uses dartls and
+  -- Lua uses lua_ls. :Format runs the same thing by hand.
+  {
+    'stevearc/conform.nvim',
+    event = 'BufWritePre',
+    cmd = 'ConformInfo',
+    keys = {
+      {
+        '<leader>tf',
+        function()
+          vim.g.disable_autoformat = not vim.g.disable_autoformat
+          vim.notify('Format on save ' .. (vim.g.disable_autoformat and 'off' or 'on'))
+        end,
+        desc = '[T]oggle [F]ormat on save',
+      },
+    },
+    opts = {
+      formatters_by_ft = {
+        python = { 'ruff_organize_imports', 'ruff_format' },
+      },
+      default_format_opts = { lsp_format = 'fallback' },
+      format_on_save = function()
+        if vim.g.disable_autoformat then return end
+        return { timeout_ms = 1000 }
+      end,
+    },
+  },
+
   -- Buffers scoped per tab
   { 'tiagovla/scope.nvim', event = 'VeryLazy', config = true },
 
@@ -143,7 +181,8 @@ return {
   -- `main` branch in May 2025 and froze master; `main` drops the module system
   -- entirely (no configs.setup, no incremental selection) and much of the
   -- ecosystem is still mid-migration. master still works and is what most
-  -- configs run today. Revisit in six months.
+  -- configs run today. Checked on Neovim 0.12.5 (Sept 2026): :checkhealth is
+  -- clean and every parser loads, so no need to migrate yet.
   {
     'nvim-treesitter/nvim-treesitter',
     branch = 'master',
