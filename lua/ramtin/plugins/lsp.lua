@@ -123,8 +123,55 @@ return {
         },
       })
 
+      -- Python: basedpyright for types/navigation, ruff for lint/format/imports.
+      -- Both are in Mason: :MasonInstall basedpyright ruff
+      local function python_path(root)
+        if vim.env.VIRTUAL_ENV then
+          return vim.env.VIRTUAL_ENV .. '/bin/python'
+        end
+        for _, dir in ipairs({ '.venv', 'venv', 'env' }) do
+          local candidate = root .. '/' .. dir .. '/bin/python'
+          if vim.fn.executable(candidate) == 1 then return candidate end
+        end
+        return vim.fn.exepath('python3')
+      end
+
+      vim.lsp.config('basedpyright', {
+        -- Point basedpyright at the project's venv (uv/poetry/venv all create
+        -- .venv by default) so third-party imports resolve without a
+        -- pyrightconfig.json in every project.
+        before_init = function(_, config)
+          if not config.root_dir then return end
+          config.settings = vim.tbl_deep_extend('force', config.settings or {}, {
+            python = { pythonPath = python_path(config.root_dir) },
+          })
+        end,
+        settings = {
+          basedpyright = {
+            -- ruff owns import sorting; two organize-imports actions just fight
+            disableOrganizeImports = true,
+            analysis = {
+              -- basedpyright's default ('recommended') is very noisy
+              typeCheckingMode = 'standard',
+              autoImportCompletions = true,
+              diagnosticMode = 'openFilesOnly',
+            },
+          },
+        },
+      })
+
+      vim.lsp.config('ruff', {
+        on_attach = function(client, bufnr)
+          -- basedpyright's hover is the useful one; ruff's only covers noqa codes
+          client.server_capabilities.hoverProvider = false
+          vim.keymap.set('n', '<leader>co', function()
+            vim.lsp.buf.code_action({ context = { only = { 'source.organizeImports' }, diagnostics = {} }, apply = true })
+          end, { buffer = bufnr, desc = 'LSP: [O]rganize imports' })
+        end,
+      })
+
       -- Add more servers here as you need them (install the binary with :Mason)
-      vim.lsp.enable({ 'lua_ls' })
+      vim.lsp.enable({ 'lua_ls', 'basedpyright', 'ruff' })
     end,
   },
 }

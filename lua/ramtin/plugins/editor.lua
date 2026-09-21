@@ -111,6 +111,7 @@ return {
           file_ignore_patterns = {
             '%.dart_tool/', 'build/', '%.git/', '%.symlinks/',
             'ios/Pods/', 'macos/Pods/', '%.freezed%.dart', '%.g%.dart',
+            '__pycache__/', '%.venv/', '%.mypy_cache/', '%.pytest_cache/', '%.ruff_cache/',
           },
         },
       })
