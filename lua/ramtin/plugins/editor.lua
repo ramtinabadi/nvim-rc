@@ -13,9 +13,11 @@ return {
     opts = { check_ts = true },
   },
 
-  -- Format on save. Python goes through ruff (imports first, then format);
-  -- everything else falls back to the attached LSP, so Dart uses dartls and
-  -- Lua uses lua_ls. :Format runs the same thing by hand.
+  -- Formatting. On save only for the filetypes in format_on_save_ft; anything
+  -- else formats with :Format. Python goes through ruff (imports, then format);
+  -- filetypes with no formatter listed fall back to the attached LSP.
+  -- Prettier is picked up from the project's node_modules, so TS projects
+  -- without Prettier are left alone.
   {
     'stevearc/conform.nvim',
     event = 'BufWritePre',
@@ -32,12 +34,18 @@ return {
     },
     opts = {
       formatters_by_ft = {
+        go = { 'gofmt' },
+        dart = { 'dart_format' },
+        typescript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
         python = { 'ruff_organize_imports', 'ruff_format' },
       },
       default_format_opts = { lsp_format = 'fallback' },
-      format_on_save = function()
-        if vim.g.disable_autoformat then return end
-        return { timeout_ms = 1000 }
+      format_on_save = function(bufnr)
+        local format_on_save_ft = { go = true, dart = true, typescript = true, typescriptreact = true }
+        if vim.g.disable_autoformat or not format_on_save_ft[vim.bo[bufnr].filetype] then return end
+        -- `dart format` has a slow cold start; 1s occasionally times out
+        return { timeout_ms = 3000 }
       end,
     },
   },
